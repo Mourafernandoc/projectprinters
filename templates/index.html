@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Impressoras</title>
+</head>
+<body>
+    <h1>Lista de Impressoras</h1>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <form method="GET" action="{{ url_for('home') }}">
+        <input type="text" name="search" placeholder="Pesquisar...">
+        <button type="submit">Pesquisar</button>
+    </form>    
+
+    <table border="1">
+        <tr>
+            <th>Série</th>
+            <th>Modelo</th>
+            <th>Marca</th>
+            <th>Setor</th>
+            <th>Conexão</th>
+        </tr>
+        {% for impressora in data %}
+        <tr>
+            <td><a href="{{ url_for('impressora_profile', serie=impressora['Série']) }}">{{ impressora['Série'] }}</a></td>
+            <td>{{ impressora['Modelo'] }}</td>
+            <td>{{ impressora['Marca'] }}</td>
+            <td>{{ impressora['Setor'] }}</td>
+            <td>{{ impressora['Conexão'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil da Impressora</title>
+    <style>
+        /* Estilo para os botões */
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            background-color: #4CAF50; /* Verde */
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button.cancel {
+            background-color: #f44336; /* Vermelho */
+        }
+
+        button.back {
+            background-color: #555555; /* Cinza */
+        }
+
+        /* Estilo para o modal */
+        .modal {
+            display: none; /* Esconde o modal por padrão */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4); /* Fundo escuro */
+            padding-top: 60px;
+        }
+
+        /* Conteúdo do modal */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        /* Estilo para o botão de fechar */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Perfil da Impressora</h1>
+    <p><strong>Série:</strong> {{ impressora['Série'] }}</p>
+    <p><strong>Modelo:</strong> {{ impressora['Modelo'] }}</p>
+    <p><strong>Marca:</strong> {{ impressora['Marca'] }}</p>
+    <p><strong>Setor:</strong> {{ impressora['Setor'] }}</p>
+    <p><strong>Conexão:</strong> {{ impressora['Conexão'] }}</p>
+
+    <!-- Botão para abrir o modal de edição -->
+    <button id="editButton">Editar Informações</button>
+
+    <!-- Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Editar Informações da Impressora</h2>
+            <form method="POST">
+                <label for="setor">Setor:</label>
+                <input type="text" id="setor" name="setor" value="{{ impressora['Setor'] }}"><br>
+                <label for="conexao">Conexão:</label>
+                <input type="text" id="conexao" name="conexao" value="{{ impressora['Conexão'] }}"><br>
+                <button type="submit">Salvar</button>
+                <button type="button" class="cancel" onclick="closeModal()">Cancelar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mensagens de sucesso ou erro -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    
+    <!-- Botão para voltar à lista de impressoras -->
+    <button class="back" onclick="window.location.href='{{ url_for('home') }}'">Voltar à lista de impressoras</button>
+
+    <script>
+        // JavaScript para abrir e fechar o modal
+        var modal = document.getElementById('editModal');
+        var btn = document.getElementById('editButton');
+        var span = document.getElementsByClassName('close')[0];
+
+        // Quando o usuário clica no botão, o modal é aberto
+        btn.onclick = function() {
+            modal.style.display = 'block';
+        }
+
+        // Quando o usuário clica no "x", o modal é fechado
+        span.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        // Quando o usuário clica fora do modal, o modal é fechado
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Função para fechar o modal ao clicar no botão "Cancelar"
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
