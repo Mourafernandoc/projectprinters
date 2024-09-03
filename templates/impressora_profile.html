@@ -8,7 +8,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <h1>Perfil da Impressora: {{ impressora['Série'] }}</h1>
+    <h1>Perfil da Impressora: {{ impressora['Modelo'] }}</h1>
     
     <form method="post">
         <div>
@@ -19,7 +19,10 @@
             <label for="conexao">Conexão:</label>
             <input type="text" id="conexao" name="conexao" value="{{ impressora['Conexão'] }}" readonly>
         </div>
-        
+        <div>
+            <label for="conexao">Série:</label>
+            <input type="text" id="conexao" name="conexao" value="{{ impressora['Série'] }}" readonly>
+        </div>
         <button type="button" id="edit-button">Editar Informações</button>
         <button type="submit" name="edit" style="display:none;">Salvar Alterações</button>
     </form>
