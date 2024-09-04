@@ -11,9 +11,9 @@ app.secret_key = 'supersecretkey'  # Necessário para usar 'flash' para mensagen
 # Configurações do Gmail
 SMTP_SERVER = 'smtp.gmail.com'
 SMTP_PORT = 587
-EMAIL_USER = 'fcezariomoura@gmail.com'  # substitua pelo seu e-mail do Gmail
-EMAIL_PASSWORD = 'F3rn@nd01124'  # substitua pela sua senha do Gmail
-EMAIL_DESTINATARIO = 'skyennonet@gmail.com'
+EMAIL_USER = 'skyennonet@gmail.com'  # substitua pelo seu e-mail do Gmail
+EMAIL_PASSWORD = 'Nadjeschd@1808'  # substitua pela sua senha do Gmail
+EMAIL_DESTINATARIO = 'fcezariomoura@gmail.com'
 
 # Função para carregar o Excel e retornar um DataFrame
 def load_excel():
@@ -56,29 +56,43 @@ def impressora_profile(serie):
             return redirect(url_for('home'))
 
         if request.method == 'POST':
-            if 'update_info' in request.form:
-                setor = request.form.get('setor')
-                conexao = request.form.get('conexao')
-                df.loc[df['Série'] == serie, 'Setor'] = setor
-                df.loc[df['Série'] == serie, 'Conexão'] = conexao
-                try:
-                    df.to_excel('impressoras.xlsx', index=False)
-                    flash("Informações atualizadas com sucesso!")
-                except Exception as e:
-                    flash(f"Erro ao salvar as alterações: {e}")
-
-            elif 'send_email' in request.form:
+            if 'request_parts' in request.form:
                 contador = request.form.get('contador')
                 peca = request.form.get('peca')
-                mensagem = f"Solicito o seguinte material para o equipamento abaixo:\n\n"
-                mensagem += f"Série: {impressora['Série']}\nModelo: {impressora['Modelo']}\nMarca: {impressora['Marca']}\nSetor: {impressora['Setor']}\nConexão: {impressora['Conexão']}\nContador: {contador}\nPeça: {peca}"
 
-                try:
-                    enviar_email(mensagem)
-                    flash("Pedido enviado com sucesso!")
-                    registrar_pedido(impressora, contador, peca)
-                except Exception as e:
-                    flash(f"Erro ao enviar o pedido: {e}")
+                # Atualizando a planilha de pedidos
+                pedido_df = pd.DataFrame({
+                    'Data': [datetime.now().strftime('%Y-%m-%d')],
+                    'Hora': [datetime.now().strftime('%H:%M:%S')],
+                    'Série': [impressora['Série']],
+                    'Modelo': [impressora['Modelo']],
+                    'Marca': [impressora['Marca']],
+                    'Setor': [impressora['Setor']],
+                    'Conexão': [impressora['Conexão']],
+                    'Contador': [contador],
+                    'Peça': [peca]
+                })
+
+                if os.path.exists('pedidos.xlsx'):
+                    pedidos = pd.read_excel('pedidos.xlsx')
+                    pedidos = pd.concat([pedidos, pedido_df], ignore_index=True)
+                else:
+                    pedidos = pedido_df
+
+                pedidos.to_excel('pedidos.xlsx', index=False)
+
+                # Enviando e-mail
+                body = f"Solicito o seguinte material para o equipamento abaixo:\n\n" \
+                    f"Série: {impressora['Série']}\n" \
+                    f"Modelo: {impressora['Modelo']}\n" \
+                    f"Marca: {impressora['Marca']}\n" \
+                    f"Setor: {impressora['Setor']}\n" \
+                    f"Conexão: {impressora['Conexão']}\n\n" \
+                    f"Peça solicitada: {peca}\n" \
+                    f"Contador: {contador}"
+
+                send_email(EMAIL_DESTINATARIO, 'Pedido de Peças', body)
+                flash("Pedido de peças enviado com sucesso!")
 
             return redirect(url_for('impressora_profile', serie=serie))
 
@@ -87,25 +101,43 @@ def impressora_profile(serie):
         flash("Erro ao carregar os dados. Por favor, verifique o arquivo Excel.")
         return redirect(url_for('home'))
 
+
+
+
 # Função para enviar e-mail
-def enviar_email(mensagem):
+def send_email(to_email, subject, body):
+    from_email = 'fcezariomoura@gmail.com'
+    from_password ='Nadjeschd@1808'
+    to_email = 'skyennonet@gmail.com'
+
+    msg = MIMEText(body)
+    msg['Subject'] = subject
+    msg['From'] = from_email
+    msg['To'] = to_email
+
     try:
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+            server = smtplib.SMTP('smtp.gmail.com', 587)
             server.starttls()
-            server.login(EMAIL_USER, EMAIL_PASSWORD)
-            msg = MIMEText(mensagem)
-            msg['Subject'] = 'Pedido de Peça'
-            msg['From'] = EMAIL_USER
-            msg['To'] = EMAIL_DESTINATARIO
-            server.sendmail(EMAIL_USER, EMAIL_DESTINATARIO, msg.as_string())
+            server.login(from_email, from_password)
+            server.sendmail(from_email, to_email, msg.as_string())
+            server.quit()
+            print("Email enviado com sucesso!")
     except Exception as e:
-        raise Exception(f"Erro ao enviar e-mail: {e}")
+            print(f"Erro ao enviar e-mail: {e}")
+
 
 # Função para registrar o pedido
 def registrar_pedido(impressora, contador, peca):
     try:
-        df = pd.read_excel('pedidos.xlsx')
-        novo_pedido = {
+        # Verifica se o arquivo 'pedidos.xlsx' existe e carrega o conteúdo
+        if os.path.exists('pedidos.xlsx'):
+            df = pd.read_excel('pedidos.xlsx')
+        else:
+            # Se o arquivo não existir, cria um DataFrame vazio com as colunas necessárias
+            df = pd.DataFrame(columns=['Data', 'Hora', 'Série', 'Modelo', 'Marca', 'Setor', 'Conexão', 'Contador', 'Peça'])
+
+        # Cria um novo pedido como um DataFrame de uma linha
+        novo_pedido = pd.DataFrame([{
             'Data': datetime.now().strftime('%Y-%m-%d'),
             'Hora': datetime.now().strftime('%H:%M:%S'),
             'Série': impressora['Série'],
@@ -115,12 +147,19 @@ def registrar_pedido(impressora, contador, peca):
             'Conexão': impressora['Conexão'],
             'Contador': contador,
             'Peça': peca
-        }
-        df = df.append(novo_pedido, ignore_index=True)
+        }])
+
+        # Concatena o novo pedido com o DataFrame existente
+        df = pd.concat([df, novo_pedido], ignore_index=True)
+
+        # Salva o DataFrame atualizado de volta no arquivo Excel
         df.to_excel('pedidos.xlsx', index=False)
+        print("Pedido registrado com sucesso")
+
     except Exception as e:
         print(f"Erro ao registrar pedido: {e}")
 
+
 if __name__ == '__main__':
     ensure_pedidos_file()
-    app.run(debug=True)
+    app.run(host='0.0.0.0',port=5000,debug=True)
