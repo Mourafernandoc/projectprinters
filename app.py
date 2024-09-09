@@ -12,7 +12,7 @@ app.secret_key = 'supersecretkey'  # Necessário para usar 'flash' para mensagen
 SMTP_SERVER = 'smtp.gmail.com'
 SMTP_PORT = 587
 EMAIL_USER = 'skyennonet@gmail.com'  # substitua pelo seu e-mail do Gmail
-EMAIL_PASSWORD = 'uhqq rkjt simc rker'  # substitua pela sua senha do Gmail
+EMAIL_PASSWORD = 'Nadjeschd@1808'  # substitua pela sua senha do Gmail
 EMAIL_DESTINATARIO = 'fcezariomoura@gmail.com'
 
 # Função para carregar o Excel e retornar um DataFrame
