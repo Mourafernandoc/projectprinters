@@ -12,7 +12,7 @@ app.secret_key = 'supersecretkey'  # Necessário para usar 'flash' para mensagen
 SMTP_SERVER = 'smtp.gmail.com'
 SMTP_PORT = 587
 EMAIL_USER = 'skyennonet@gmail.com'  # substitua pelo seu e-mail do Gmail
-EMAIL_PASSWORD = 'Nadjeschd@1808'  # substitua pela sua senha do Gmail
+EMAIL_PASSWORD = 'uhqq rkjt simc rker'  # substitua pela sua senha do Gmail
 EMAIL_DESTINATARIO = 'fcezariomoura@gmail.com'
 
 # Função para carregar o Excel e retornar um DataFrame
@@ -106,9 +106,9 @@ def impressora_profile(serie):
 
 # Função para enviar e-mail
 def send_email(to_email, subject, body):
-    from_email = 'fcezariomoura@gmail.com'
-    from_password ='Nadjeschd@1808'
-    to_email = 'skyennonet@gmail.com'
+    from_email = 'skyennonet@gmail.com'
+    from_password ='uhqq rkjt simc rker'
+    to_email = 'fcezariomoura@gmail.com'
 
     msg = MIMEText(body)
     msg['Subject'] = subject
