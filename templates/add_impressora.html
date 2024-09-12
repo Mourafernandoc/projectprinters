@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Impressora</title>
+</head>
+<body>
+    <h1>Adicionar Nova Impressora</h1>
+    <form method="POST" action="{{ url_for('add_impressora') }}">
+        <label for="serie">Série:</label>
+        <input type="text" name="serie" id="serie" required><br>
+
+        <label for="modelo">Modelo:</label>
+        <input type="text" name="modelo" id="modelo" required><br>
+
+        <label for="marca">Marca:</label>
+        <input type="text" name="marca" id="marca" required><br>
+
+        <label for="setor">Setor:</label>
+        <input type="text" name="setor" id="setor"><br>
+
+        <label for="conexao">Conexão:</label>
+        <input type="text" name="conexao" id="conexao"><br>
+
+        <button type="submit">Adicionar Impressora</button>
+    </form>
+</body>
+</html>

@@ -1,56 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Impressoras</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            width: 250px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            background-color: #f5f5f5;
+        }
+        .card h3 {
+            margin: 12px 0;
+            font-size: 1.2em;
+        }
+        .card p {
+            margin: 8px 0;
+            color: #666;
+        }
+        .card a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .card a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <header class="container">
-        <h1>Lista de Impressoras</h1>
-        <button onclick="toggleDarkMode()">Modo Escuro</button>
-    </header>
-
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
+    <h1>Lista de Impressoras</h1>
 
     <form method="GET" action="{{ url_for('home') }}">
-        <input type="text" name="search" placeholder="Pesquisar...">
+        <input type="text" name="search" placeholder="Pesquisar impressora" value="{{ request.args.get('search', '') }}">
         <button type="submit">Pesquisar</button>
-    </form>    
+    </form>
 
-    <table border="1">
-        <tr>
-            <th>Série</th>
-            <th>Modelo</th>
-            <th>Marca</th>
-            <th>Setor</th>
-            <th>Conexão</th>
-        </tr>
+    <div class="card-container">
         {% for impressora in data %}
-        <tr>
-            <td><a href="{{ url_for('impressora_profile', serie=impressora['Série']) }}">{{ impressora['Série'] }}</a></td>
-            <td>{{ impressora['Modelo'] }}</td>
-            <td>{{ impressora['Marca'] }}</td>
-            <td>{{ impressora['Setor'] }}</td>
-            <td>{{ impressora['Conexão'] }}</td>
-        </tr>
+        <div class="card">
+            <!-- Verifica se existe uma imagem específica para o modelo da impressora -->
+            <img src="{{ url_for('static', filename='images/' + impressora.modelo + '.png') }}" 
+                 onerror="this.src='{{ url_for('static', filename='images/default-profile.png') }}'" 
+                 alt="Foto de {{ impressora.modelo }}">
+            <h3>{{ impressora.modelo }}</h3>
+            <p><strong>Série:</strong> <a href="{{ url_for('impressora_profile', serie=impressora.serie) }}">{{ impressora.serie }}</a></p>
+            <p><strong>Marca:</strong> {{ impressora.marca }}</p>
+            <p><strong>Setor:</strong> {{ impressora.setor }}</p>
+            <p><strong>Conexão:</strong> {{ impressora.conexao }}</p>
+        </div>
+        {% else %}
+        <p>Nenhuma impressora encontrada.</p>
         {% endfor %}
-    </table>
+    </div>
 
-    <script>
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            const elements = document.querySelectorAll('header, button, th');
-            elements.forEach(el => el.classList.toggle('dark-mode'));
-        }
-    </script>
 </body>
 </html>

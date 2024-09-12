@@ -4,25 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil da Impressora</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <h1>Perfil da Impressora: {{ impressora['Modelo'] }}</h1>
+    <h1>Perfil da Impressora: {{ impressora['modelo'] }}</h1>
     <button onclick="toggleDarkMode()">Modo Escuro</button>
     
     <form method="post">
         <div>
             <label for="setor">Setor:</label>
-            <input type="text" id="setor" name="setor" value="{{ impressora['Setor'] }}" readonly>
+            <input type="text" id="setor" name="setor" value="{{ impressora['setor'] }}" readonly>
         </div>
         <div>
             <label for="conexao">Conexão:</label>
-            <input type="text" id="conexao" name="conexao" value="{{ impressora['Conexão'] }}" readonly>
+            <input type="text" id="conexao" name="conexao" value="{{ impressora['conexao'] }}" readonly>
         </div>
         <div>
-            <label for="conexao">Série:</label>
-            <input type="text" id="conexao" name="conexao" value="{{ impressora['Série'] }}" readonly>
+            <label for="serie">Série:</label>
+            <input type="text" id="serie" name="serie" value="{{ impressora['serie'] }}" readonly>
         </div>
         <button type="button" id="edit-button">Editar Informações</button>
         <button type="submit" name="edit" style="display:none;">Salvar Alterações</button>
@@ -53,9 +53,9 @@
         <tbody>
             {% for pedido in pedidos %}
             <tr>
-                <td>{{ pedido['Data'] }}</td>
-                <td>{{ pedido['Contador'] }}</td>
-                <td>{{ pedido['Peça'] }}</td>
+                <td>{{ pedido.data }}</td>
+                <td>{{ pedido.contador }}</td>
+                <td>{{ pedido.peca }}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -74,7 +74,7 @@
             });
 
             $('#cancel-request').click(function() {
-                $('#request-pparts-popup').hide();
+                $('#request-parts-popup').hide();
             });
         });
 

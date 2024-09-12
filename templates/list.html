@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Impressoras</title>
+</head>
+<body>
+    <h1>Lista de Impressoras</h1>
+
+    {% if impressoras %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Série</th>
+                    <th>Modelo</th>
+                    <th>Marca</th>
+                    <th>Setor</th>
+                    <th>Conexão</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for impressora in impressoras %}
+                    <tr>
+                        <td>{{ impressora.serie }}</td>
+                        <td>{{ impressora.modelo }}</td>
+                        <td>{{ impressora.marca }}</td>
+                        <td>{{ impressora.setor }}</td>
+                        <td>{{ impressora.conexao }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nenhuma impressora encontrada.</p>
+    {% endif %}
+</body>
+</html>
