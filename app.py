@@ -248,4 +248,4 @@ def init_db():
 
 if __name__ == '__main__':
     init_db()  # Inicializa o banco de dados e cria as tabelas
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')

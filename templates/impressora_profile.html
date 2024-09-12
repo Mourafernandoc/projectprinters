@@ -8,58 +8,71 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <h1>Perfil da Impressora: {{ impressora['modelo'] }}</h1>
-    <button onclick="toggleDarkMode()">Modo Escuro</button>
-    
-    <form method="post">
-        <div>
-            <label for="setor">Setor:</label>
-            <input type="text" id="setor" name="setor" value="{{ impressora['setor'] }}" readonly>
+    <div class="container">
+        <div class="profile-header">
+            <h1>Perfil da Impressora: {{ impressora.modelo }}</h1>
+            <button onclick="toggleDarkMode()">Modo Escuro</button>
         </div>
-        <div>
-            <label for="conexao">Conexão:</label>
-            <input type="text" id="conexao" name="conexao" value="{{ impressora['conexao'] }}" readonly>
-        </div>
-        <div>
-            <label for="serie">Série:</label>
-            <input type="text" id="serie" name="serie" value="{{ impressora['serie'] }}" readonly>
-        </div>
-        <button type="button" id="edit-button">Editar Informações</button>
-        <button type="submit" name="edit" style="display:none;">Salvar Alterações</button>
-    </form>
-    
-    <button id="request-parts-button">Solicitar Peças</button>
-    
-    <div id="request-parts-popup" style="display:none;">
-        <form method="post">
-            <label for="contador">Contador:</label>
-            <input type="text" id="contador" name="contador" required>
-            <label for="peca">Peça:</label>
-            <input type="text" id="peca" name="peca" required>
-            <button type="submit" name="request_parts">Enviar Pedido</button>
-            <button type="button" id="cancel-request">Cancelar</button>
-        </form>
-    </div>
 
-    <h2>Pedidos de Peças</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Data</th>
-                <th>Contador</th>
-                <th>Peça</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for pedido in pedidos %}
-            <tr>
-                <td>{{ pedido.data }}</td>
-                <td>{{ pedido.contador }}</td>
-                <td>{{ pedido.peca }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <div class="profile-content">
+            <div class="profile-details">
+                <form method="post">
+                    <div>
+                        <label for="setor">Setor:</label>
+                        <input type="text" id="setor" name="setor" value="{{ impressora.setor }}" readonly>
+                    </div>
+                    <div>
+                        <label for="conexao">Conexão:</label>
+                        <input type="text" id="conexao" name="conexao" value="{{ impressora.conexao }}" readonly>
+                    </div>
+                    <div>
+                        <label for="serie">Série:</label>
+                        <input type="text" id="serie" name="serie" value="{{ impressora.serie }}" readonly>
+                    </div>
+                    <button type="button" id="edit-button">Editar Informações</button>
+                    <button type="submit" name="edit" style="display:none;">Salvar Alterações</button>
+                </form>
+            </div>
+
+            <div class="profile-image">
+                <img src="{{ url_for('static', filename='images/' + impressora.modelo + '.png') }}" alt="Imagem da impressora">
+            </div>
+        </div>
+
+        <h2>Pedidos de Peças</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Contador</th>
+                    <th>Peça</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedido in pedidos %}
+                <tr>
+                    <td>{{ pedido.data }}</td>
+                    <td>{{ pedido.contador }}</td>
+                    <td>{{ pedido.peca }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button id="request-parts-button">Solicitar Peças</button>
+        <div id="request-parts-popup" style="display:none;">
+            <form method="post">
+                <label for="contador">Contador:</label>
+                <input type="text" id="contador" name="contador" required>
+                <label for="peca">Peça:</label>
+                <input type="text" id="peca" name="peca" required>
+                <button type="submit" name="request_parts">Enviar Pedido</button>
+                <button type="button" id="cancel-request">Cancelar</button>
+            </form>
+        </div>
+
+        <a href="{{ url_for('home') }}"><button>Voltar à Lista de Impressoras</button></a>
+    </div>
 
     <script>
         $(document).ready(function() {
@@ -82,7 +95,5 @@
             document.body.classList.toggle('dark-mode');
         }
     </script>
-
-    <a href="{{ url_for('home') }}"><button>Voltar à Lista de Impressoras</button></a>
 </body>
 </html>
