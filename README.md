@@ -93,7 +93,7 @@ Isso permitirá o acesso via rede local através do IP da máquina onde a aplica
 
 ##Estrutura de Arquivos
 
-	```bash
+```bash
 	.
 ├── app.py                  # Arquivo principal da aplicação Flask
 ├── bd-create.py            # Script para criação e migração do banco de dados
@@ -106,7 +106,7 @@ Isso permitirá o acesso via rede local através do IP da máquina onde a aplica
 │   ├── images/             # Diretório para imagens das impressoras
 ├── requirements.txt        # Arquivo de dependências da aplicação
 └── impressoras.db          # Banco de dados SQLite (após a inicialização)
-
+```
 
 ##Licença
 
