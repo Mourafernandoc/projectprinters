@@ -1,0 +1,29 @@
+name: CI/CD Pipeline #nome do workflow
+
+on:
+push:
+    branches:
+    - main #branch que será executada
+jobs:
+    build:
+    runs-on: ubuntu-latest #plataforma que será usada para executar o job
+
+    steps:
+        -name: Checkout do código
+        uses: actions/checkout@v2 # ação para fazer checkout do repositório
+
+        -name: Configurar Docker Buildx
+        uses: docker/setup-buildx@v1 #configura o dooker para builds
+
+        -name: Login no Docker Hub
+        uses: docker/login-action@v1
+        with:
+            username: ${{ secrets.DOCKER_USERNAME }}# Nome de usuario do Docker Hub
+            password: ${{ secrets.DOCKER_PASSWORD}}# SENHA DO DOCKER HUB
+
+        -name: Construir e enviar a imagem Docker
+        uses: docker/build-push-action@v2
+        with:
+            context: .#Diretorio atual como contexto do Docker
+            push: true #enviar a imagem para o Docker Hub
+            tags: skyennonet/gerenciamento-impressoras:latest
