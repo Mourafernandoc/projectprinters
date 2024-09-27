@@ -1,0 +1,5 @@
+venv/
+__pycahe__/
+*.pyc
+*.pyo
+*.db
