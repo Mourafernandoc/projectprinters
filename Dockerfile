@@ -2,7 +2,7 @@
 FROM python:3.10-slim
 
 #diretorio de trabalho no conteiner
-WORKDIR /app/api
+WORKDIR /app
 
 #copiar os arquivos de dependencias para o conteiner
 COPY requirements.txt requirements.txt
